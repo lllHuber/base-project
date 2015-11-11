@@ -1,7 +1,6 @@
 {
   "name": "lstv-project-name",
   "dependencies": {
-    "jquery": "~2.1.4",
-    "foundation": "~5.5.3"
+    "jquery": "~2.1.4"
   }
 }
