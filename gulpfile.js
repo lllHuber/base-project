@@ -35,7 +35,7 @@ var plugins = require('gulp-load-plugins')({
 // 2. PATHS
 // ------------------------------
 	
-//external libraries (add paths to all files to include in the build process)
+// external libraries (add paths to all files to include in the build process)
 var bowerJS = [
 		"bower_components/jquery/dist/jquery.js"
 	],
@@ -43,12 +43,12 @@ var bowerJS = [
 		""
 	];
 
-//project files
+// project files
 var projectJS = ["components/js/functions.js"];
 var projectSCSS = ["components/scss/*.scss"];
 var projectHTML = ["builds/development/*.html"];
 
-//combined arrays of source files
+// combined arrays of source files
 var sourcesJS = bowerJS.concat(projectJS);
 var sourcesSCSS = bowerCSS.concat(projectSCSS);
 var sourcesHTML = projectHTML;
@@ -89,7 +89,7 @@ gulp.task("clean", function (cb) {
 	rimraf("builds/production/*", cb);
 });
 
-// concatinate and minify styles
+// concatinate and minify stylesheets
 gulp.task("sass", function () {
 	gulp.src(projectSCSS)
 		.pipe(plugins.compass({
@@ -119,7 +119,14 @@ gulp.task("html", function () {
 		.pipe(gulp.dest(outputDir))
 		.pipe(plugins.connect.reload())
 	;
-} );
+});
+
+// initialize html
+gulp.task("inithtml", function () {
+	gulp.src("components/html/*.html")
+		.pipe(gulp.dest("builds/development"))
+	;
+});
 
 // set up a server with automatic reload
 gulp.task("server", function () {
@@ -128,6 +135,7 @@ gulp.task("server", function () {
 		port: 7777,
 		livereload: true
 	});	
+	// start webbrowser
 	gulp.src(outputDir + "/")
   		.pipe(plugins.open({
   			uri: "http://localhost:7777"
@@ -150,6 +158,11 @@ gulp.task("watch", function () {
 
 // 7. BUILDS
 // ------------------------------
+
+// initialize project files
+gulp.task("init", function (cb) {
+	sequence("development", ["sass", "js", "inithtml"], cb);
+});
 
 // build development files
 gulp.task("develop", function (cb) {
